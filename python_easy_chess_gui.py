@@ -714,6 +714,9 @@ class EasyChessGui:
 
         self.gui_theme = 'Reddit'
 
+        self.possible_move_light_color = '#a9d08e'
+        self.possible_move_dark_color = '#86bf60'
+
         self.is_save_time_left = False
         self.is_save_user_comment = True
 
@@ -2034,6 +2037,18 @@ class EasyChessGui:
                             # Change the color of the "fr" board square
                             self.change_square_color(window, fr_row, fr_col)
 
+                            # Highlight possible moves
+                            for m in board.legal_moves:
+                                if m.from_square == chess.square(fr_col, 7-fr_row):
+                                    to_sq = m.to_square
+                                    to_row = 7 - chess.square_rank(to_sq)
+                                    to_col = chess.square_file(to_sq)
+                                    
+                                    button_sq = window.find_element(key=(to_row, to_col))
+                                    is_dark_sq = True if (to_row + to_col) % 2 else False
+                                    possible_color = self.possible_move_dark_color if is_dark_sq else self.possible_move_light_color
+                                    button_sq.Update(button_color=('white', possible_color))
+
                             move_state = 1
                             moved_piece = board.piece_type_at(chess.square(fr_col, 7-fr_row))  # Pawn=1
 
@@ -2050,7 +2065,9 @@ class EasyChessGui:
                                 color = self.sq_dark_color if (to_row + to_col) % 2 else self.sq_light_color
 
                                 # Restore the color of the fr square
+                                # Restore the color of the fr square
                                 button_square.Update(button_color=('white', color))
+                                self.redraw_board(window)
                                 move_state = 0
                                 continue
 
@@ -2149,7 +2166,9 @@ class EasyChessGui:
                                     if (move_from[0] + move_from[1]) % 2 else self.sq_light_color
 
                                 # Restore the color of the fr square
+                                # Restore the color of the fr square
                                 button_square.Update(button_color=('white', color))
+                                self.redraw_board(window)
                                 continue
 
                 if (is_new_game or is_exit_game or is_exit_app or
