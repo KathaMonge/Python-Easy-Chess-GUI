@@ -1294,7 +1294,7 @@ class EasyChessGui:
                 best_move = chess.Move.from_uci(msg.split()[1])
             except Exception:
                 logging.exception(f'Engine sent {best_move}')
-                sg.Popup(
+                sg.popup(
                     f'Engine error, it sent a {best_move} bestmove.\n \
                     Back to Neutral mode, it is better to change engine {self.opp_id_name}.',
                     icon=ico_path[platform]['pecg'],
@@ -1629,7 +1629,7 @@ class EasyChessGui:
 
     def set_depth_limit(self):
         """ Returns max depth based from user setting """
-        user_depth = sg.PopupGetText(
+        user_depth = sg.popup_get_text(
             f'Current depth is {self.max_depth}\n\nInput depth [{MIN_DEPTH} to {MAX_DEPTH}]',
             title=BOX_TITLE,
             icon=ico_path[platform]['pecg']
@@ -1864,7 +1864,7 @@ class EasyChessGui:
                                     window.Element('advise_info_k').Update(msg_line)
                                 except Exception:
                                     logging.exception('Adviser engine error')
-                                    sg.Popup(
+                                    sg.popup(
                                         f'Adviser engine {self.adviser_id_name} error.\n \
                                         It is better to change this engine.\n \
                                         Change to Neutral mode first.',
@@ -1950,7 +1950,7 @@ class EasyChessGui:
                         logging.info('User resigns')
 
                         # Verify resign
-                        reply = sg.Popup('Do you really want to resign?',
+                        reply = sg.popup('Do you really want to resign?',
                                          button_type=sg.POPUP_BUTTONS_YES_NO,
                                          title=BOX_TITLE,
                                          icon=ico_path[platform]['pecg'])
@@ -2000,7 +2000,7 @@ class EasyChessGui:
                     if button == 'Paste':
                         # Pasting fen is only allowed before the game starts.
                         if len(self.game.variations):
-                            sg.Popup('Press Game->New then paste your fen.',
+                            sg.popup('Press Game->New then paste your fen.',
                                      title='Mode Play')
                             continue
                         try:
@@ -2416,7 +2416,7 @@ class EasyChessGui:
         self.save_game()
 
         if board.is_game_over(claim_draw=True):
-            sg.Popup('Game is over.', title=BOX_TITLE,
+            sg.popup('Game is over.', title=BOX_TITLE,
                      icon=ico_path[platform]['pecg'])
 
         if is_exit_app:
@@ -2493,8 +2493,8 @@ class EasyChessGui:
         oriented such that the white pieces are at the bottom.
         :return: GUI layout
         """
-        sg.ChangeLookAndFeel(self.gui_theme)
-        sg.SetOptions(margins=(0, 3), border_width=1)
+        sg.change_look_and_feel(self.gui_theme)
+        sg.set_options(margins=(0, 3), border_width=1)
 
         # Define board
         board_layout = self.create_board(is_user_white)
@@ -2658,7 +2658,7 @@ class EasyChessGui:
                         pgn = v['pgn_k']
                         if pgn == '':
                             logging.info('Missing pgn file.')
-                            sg.Popup(
+                            sg.popup(
                                 'Please locate your pgn file by pressing \
                                 the Browse button followed by Display Players.',
                                 title=win_title,
@@ -2698,7 +2698,7 @@ class EasyChessGui:
                             player_name = v['player_k'][0]
                         except IndexError as e:
                             logging.info(e)
-                            sg.Popup('Please locate your pgn file by '
+                            sg.popup('Please locate your pgn file by '
                                      'pressing the Browse button followed by Display Players.',
                                      title=win_title,
                                      icon=ico_path[platform]['pecg'])
@@ -2950,7 +2950,7 @@ class EasyChessGui:
                                         new_engine_id_name = msg[1]
                                     else:
                                         is_cancel_add_win = True
-                                        sg.Popup(
+                                        sg.popup(
                                             'This engine cannot be '
                                             'installed. Please select '
                                             'another engine. It should be uci '
@@ -2967,7 +2967,7 @@ class EasyChessGui:
                                         break
 
                                 else:
-                                    sg.Popup(
+                                    sg.popup(
                                         'Please define the engine or browse to the location of the engine file first.',
                                         title=button_title + '/Get Id name'
                                     )
@@ -2980,7 +2980,7 @@ class EasyChessGui:
                                     if new_engine_id_name != '':
                                         # Check if new_engine_id_name is already existing
                                         if self.is_name_exists(new_engine_id_name):
-                                            sg.Popup(
+                                            sg.popup(
                                                 f'{new_engine_id_name} is existing. Please modify the name! \
                                                 You can modify the config later thru Engine->Manage->Edit',
                                                 title=button_title,
@@ -2989,7 +2989,7 @@ class EasyChessGui:
                                             continue
                                         break
                                     else:
-                                        sg.Popup(
+                                        sg.popup(
                                             'Please input engine id name, or press Get Id Name button.',
                                             title=button_title,
                                             icon=ico_path[platform]['pecg']
@@ -3019,7 +3019,7 @@ class EasyChessGui:
                             t.join()
 
                             if msg == 'Failure':
-                                sg.Popup(
+                                sg.popup(
                                     f'Failed to add {new_engine_id_name} in config file!',
                                     title=button_title,
                                     icon=ico_path[platform]['pecg']
@@ -3080,7 +3080,7 @@ class EasyChessGui:
                         try:
                             orig_idname = engine_id_name = v['engine_id_name_k'][0]
                         except Exception:
-                            sg.Popup('Please select an engine to modify.',
+                            sg.popup('Please select an engine to modify.',
                                      title='/Edit/Modify',
                                      icon=ico_path[platform]['pecg'])
                             continue
@@ -3272,7 +3272,7 @@ class EasyChessGui:
                         try:
                             engine_id_name = v['engine_id_name_k'][0]
                         except Exception:
-                            sg.Popup('Please select an engine to delete.',
+                            sg.popup('Please select an engine to delete.',
                                      title=button_title,
                                      icon=ico_path[platform]['pecg'])
                             continue
@@ -3564,7 +3564,7 @@ class EasyChessGui:
             if button == 'Play':
                 if engine_id_name is None:
                     logging.warning('Install engine first!')
-                    sg.Popup('Install engine first! in Engine/Manage/Install',
+                    sg.popup('Install engine first! in Engine/Manage/Install',
                              icon=ico_path[platform]['pecg'], title='Mode')
                     continue
 
