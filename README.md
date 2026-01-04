@@ -28,7 +28,7 @@ sudo apt install python3-pip
 sudo apt install python3-tk
 ```
 
-> **Nota para usuarios de Linux:**  
+**Nota para usuarios de Linux:**  
 > En muchas distribuciones, el paquete base `python3` no incluye herramientas adicionales como `pip` ni el módulo `tkinter`.  
 > Por eso es necesario instalar explícitamente `python3-pip` y `python3-tk` usando el gestor de paquetes de tu distribución (por ejemplo `apt` en Debian/Ubuntu).
 > En otras distribuciones, los nombres de los paquetes pueden variar.
