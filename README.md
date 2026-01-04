@@ -10,13 +10,28 @@ Nota: Este fork del proyecto [Python Easy Chess GUI](https://github.com/fsmosca/
 
 ## A. Requisitos del Sistema
 
-Si deseas ejecutar el programa desde el codigo fuente de Python, se requiere lo siguiente:
+Para ejecutar el programa, se requiere lo siguiente:
 
 * **Python 3.7** o superior.
 * **python-chess** v0.28.0 o superior (`pip install python-chess`).
 * **FreeSimpleGUI** (`pip install FreeSimpleGUI`).
 * **Pyperclip** (`pip install pyperclip`).
 * Los directorios `Images`, `Engines`, `Icon` y `Book` incluidos en este repositorio.
+
+## Instalación en Linux
+
+Antes de instalar las dependencias de Python, asegúrate de tener los paquetes básicos:
+
+```bash
+sudo apt install python3
+sudo apt install python3-pip
+sudo apt install python3-tk
+```
+
+> **Nota para usuarios de Linux:**  
+> En muchas distribuciones, el paquete base `python3` no incluye herramientas adicionales como `pip` ni el módulo `tkinter`.  
+> Por eso es necesario instalar explícitamente `python3-pip` y `python3-tk` usando el gestor de paquetes de tu distribución (por ejemplo `apt` en Debian/Ubuntu).
+> En otras distribuciones, los nombres de los paquetes pueden variar.
 
 ---
 
