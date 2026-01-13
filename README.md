@@ -1,132 +1,66 @@
-# Python Easy Chess GUI
+# Python Easy Chess GUI (Fork español y simplificado)
 
-Una interfaz grafica para ajedrez (GUI) desarrollada en Python utilizando los modulos `FreeSimpleGUI` (anteriormente `PySimpleGUI`) y `python-chess`. Este programa permite a los usuarios jugar contra motores de ajedrez UCI, gestionar repertorios de partidas y analizar posiciones con herramientas avanzadas.
-
-Este programa esta basado en un [demo de ajedrez contra IA](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/Chess) de `PySimpleGUI`.
-
-Nota: Este fork del proyecto [Python Easy Chess GUI](https://github.com/fsmosca/Python-Easy-Chess-GUI) tiene como objetivo agregar la funcionalidad de mostrar los movimientos posibles en el tablero de la interfaz y tambien utlizar el codigo para que pueda ser integrado con un microcontrolador (esp32) para reflejar los movimientos en un tablero de ajedrez simulado de manera digital con luces leds.
+Una interfaz gráfica de ajedrez compacta y funcional desarrollada en Python. Esta versión ha sido simplificada drásticamente para enfocarse en la facilidad de uso, la automatización y la integración futura con hardware (LEDs/ESP32).
 
 ---
 
-[demo.webm](https://github.com/user-attachments/assets/730c4bc4-4b95-43db-bcf5-ba16c8a77846)
+## Características Principales
 
-[Ver demo en YouTube](https://youtu.be/ig4NHqxFubw)
+- **Descarga Automática de Motor**: No se necesita buscar Stockfish. El programa detecta el sistema operativo (Windows, Linux, macOS) y arquitectura (x64, ARM/M1/M2) y descarga la versión correcta de Stockfish 16 automáticamente.
+- **Interfaz Ultra-Compacta**: Desarrollada con `FreeSimpleGUI`, diseñada para ser ligera y directa.
+- **Modos de Juego**:
+    - **vs Jugador**: Juega localmente con otra persona.
+    - **vs BOT**: Enfrenta al motor de ajedrez Stockfish.
+- **Asistente de Movimientos**: Sugerencias visuales en tiempo real sobre el tablero para ayudarte a encontrar la mejor jugada. Funciona en ambos modos.
+- **Gestión de FEN**: Carga cualquier posición de ajedrez pegando una cadena FEN.
+- **Feedback Visual Avanzado**: Resaltado de movimientos válidos, capturas, enroques y errores.
 
 ---
 
-## A. Requisitos del Sistema
+## Requisitos e Instalación
 
-Para ejecutar el programa, se requiere lo siguiente:
+### 1. Requisitos
+- Python 3.8 o superior.
+- Dependencias de Python:
+  ```bash
+  pip install python-chess FreeSimpleGUI
+  ```
 
-* **Python 3.7** o superior.
-* **python-chess** v0.28.0 o superior (`pip install python-chess`).
-* **FreeSimpleGUI** (`pip install FreeSimpleGUI`).
-* **Pyperclip** (`pip install pyperclip`).
-* Los directorios `Images`, `Engines`, `Icon` y `Book` incluidos en este repositorio.
-
-## Instalación en Linux
-
-Antes de instalar las dependencias de Python, asegúrate de tener los paquetes básicos:
-
+### 2. Instalación en Linux
+Si usas Linux, asegúrate de tener instaladas las librerías de `tkinter`:
 ```bash
 sudo apt install python3
 sudo apt install python3-pip
 sudo apt install python3-tk
 ```
 
-**Nota para usuarios de Linux:**  
-> En muchas distribuciones, el paquete base `python3` no incluye herramientas adicionales como `pip` ni el módulo `tkinter`.  
-> Por eso es necesario instalar explícitamente `python3-pip` y `python3-tk` usando el gestor de paquetes de tu distribución (por ejemplo `apt` en Debian/Ubuntu).
-> En otras distribuciones, los nombres de los paquetes pueden variar.
+---
 
-**Sobre motores de ajedrez en Linux/ARM:**  
-> Este repositorio **no incluye** motores de ajedrez precompilados para Linux ni para arquitecturas ARM.  
-> Si deseas jugar con un motor como **Stockfish**, debes descargarlo e instalarlo por separado desde su sitio oficial:  
-> [Stockfish Chess Engine](https://stockfishchess.org/download/)  
-> Una vez instalado, asegúrate de configurar la ruta del motor en la aplicación.
+## Instrucciones de Uso
+
+1. **Inicio**: Ejecuta `python play_chess.py`. En el primer inicio, el programa descargará el motor Stockfish en la carpeta `engines/`. Puede tardar unos minutos.
+2. **Selección/Deselección**: Haz clic en una pieza para ver sus movimientos válidos. Haz clic de nuevo en la misma pieza para deseleccionarla.
+3. **Bot y Asistente**:
+    - Usa el botón **vs BOT** para cambiar entre modos y activar el motor oponente.
+    - Usa el botón **ASISTENTE** para ver la mejor jugada sugerida (se resalta en el tablero).
+4. **Confirmación de Acciones**: Botones como "REINICIAR" o "SALIR" requieren un doble clic de confirmación para evitar cierres accidentales.
 
 ---
 
-## B. Caracteristicas Detalladas
+## Detalles Técnicos para Desarrolladores
 
-### 1. Gestion de Partidas y Repertoios PGN
-El programa guarda automaticamente todas las partidas jugadas en el archivo `pecg_auto_save_games.pgn`. Ademas, permite guardar partidas especificas en:
-* **Mis Juegos**: Repertoio personal general.
-* **Repertorio de Blancas/Negras**: Archivos dedicados para estudiar aperturas o lineas especificas.
-
-### 2. Soporte para Motores UCI
-Puedes instalar cualquier motor compatible con el protocolo UCI (como Stockfish).
-* **Instalacion**: Ve a `Engine -> Manage -> Install` en modo Neutral.
-* **Configuracion**: Es posible editar parametros internos del motor (como Hash, Threads, etc.) mediante `Engine -> Manage -> Edit`.
-
-### 3. Asistencia de Libros de Aperturas (Polyglot)
-El programa admite el uso de libros de aperturas en formato `.bin`.
-* Puedes ver las jugadas sugeridas por el libro haciendo clic derecho en las etiquetas de `BOOK` y seleccionando `Show`.
-* Permite configurar libros distintos para el motor y para consulta del usuario.
-
-### 4. Analisis con Motor Consejero (Adviser)
-Ademas del motor oponente, puedes configurar un "Adviser" (Consejero). Al activarlo con clic derecho en `Adviser -> Start`, el motor analizara la posicion actual permanentemente y mostrara la evaluacion y la linea principal.
+- **Multihilo (Threading)**: El motor Stockfish se ejecuta en hilos separados para evitar que la interfaz se congele durante el análisis.
+- **Thread-Safety**: Se utiliza `board.copy()` al pasar datos al motor para asegurar que la lógica de la GUI no interfiera con el análisis.
+- **Protocolo UCI**: Comunicación estándar con el motor de ajedrez.
+- **Detección de OS**: Lógica funcional en `ensure_engine()` que maneja descargas de `.zip` (Windows) y `.tar` (Unix).
 
 ---
 
-## C. Guia de Instalacion Paso a Paso
-
-1. **Desde el Codigo Fuente**:
-   * Descarga todos los archivos del repositorio, manteniendo la estructura de carpetas.
-   * Instala las dependencias:
-     ```bash
-     pip install python-chess FreeSimpleGUI pyperclip
-     ```
-     o
-
-     ```bash
-     pip install -r requirements.txt
-     ```
-   * Coloca tus motores UCI favoritos en la carpeta `Engines`.
-
-2. **Uso en Linux**:
-   Asegurate de dar permisos de ejecucion a los motores UCI con el comando:
-   `chmod +x nombre_del_motor`.
-
+## Créditos
+- **FreeSimpleGUI**: Basado en la evolución de PySimpleGUI.
+- **Python-Chess**: El corazón lógico del juego.
+- **Stockfish**: El motor de ajedrez más potente del mundo.
+- **Python-Easy-Chess-GUI**: Proyecto original. Fork de https://github.com/fsmosca/Python-Easy-Chess-GUI
 ---
 
-## D. Como Utilizar el Programa
-
-### Modos de Operacion
-La GUI tiene dos modos principales:
-1. **Neutral**: Para configuracion de motores, colores, temas y opciones de tiempo.
-2. **Play**: Para jugar la partida activamente.
-
-### Para Jugar como Blancas
-* Cambia a `Mode -> Play`.
-* Haz clic en la pieza y luego en la casilla de destino.
-
-### Para Jugar como Negras
-* En modo Neutral, ve a `Board -> Flip` para que las piezas negras esten abajo.
-* Cambia a `Mode -> Play`.
-* Ve a `Engine -> Go` para que el motor realice la primera jugada de las blancas.
-
-### Funciones de Analisis y FEN
-* **Pegar FEN**: Puedes cargar una posicion desde el portapapeles en `FEN -> Paste` (debe estar en modo `Play`).
-* **Ver Info de Busqueda**: Haz clic derecho sobre la etiqueta de informacion del oponente y selecciona `Show` para ver profundidad, puntaje y tiempo.
-
-### Configuracion de Tiempo
-* **Time -> Engine**: Define el tiempo disponible para el motor (soporta incrementos Fischer, Delay y Classical).
-* **Time -> User**: Define tu propio tiempo.
-
----
-
-## E. Personalizacion Visual
-En modo Neutral, puedes cambiar la apariencia del tablero:
-* **Board -> Color**: Elige entre varios colores de casillas (Marron, Azul, Verde, Gris).
-* **Board -> Theme**: Selecciona temas visuales predefinidos para la interfaz.
-
----
-
-## F. Creditos y Librerias
-* **FreeSimpleGUI**: Biblioteca principal para la interfaz grafica.
-* **Python-Chess**: Motor logico para el manejo de reglas de ajedrez y protocolos UCI.
-* **Pyperclip**: Gestion del portapapeles para copiar/pegar FEN y PGN.
-* **PyInstaller**: Utilizado para la creacion del archivo ejecutable.
-* **pgn-extract**: Utilidad recomendada para el manejo avanzado de archivos PGN.
-* **Codigo fuente**: [Repositorio GitHub de Ferdinand Mosca](https://github.com/fsmosca/Python-Easy-Chess-GUI)
+*Proyecto optimizado para claridad, robustez y facilidad de exportación.*
