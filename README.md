@@ -1,7 +1,7 @@
 # Python Easy Chess GUI (Fork español y simplificado)
 
-Una interfaz gráfica de ajedrez compacta y funcional desarrollada en Python. Esta versión ha sido simplificada drásticamente para enfocarse en la facilidad de uso, la automatización y la integración futura con hardware (LEDs/ESP32).
-
+Una interfaz gráfica de ajedrez compacta y funcional desarrollada en Python. Esta versión ha sido simplificada drásticamente para enfocarse en la facilidad de uso, la automatización y la integración futura con hardware.
+<br>
 <p align="center">
     <img width="485" height="657" alt="SS NEW UI" src="https://github.com/user-attachments/assets/07d30ff2-c567-4d01-a711-716a813b0633" />
 </p>
