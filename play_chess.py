@@ -5,11 +5,17 @@ import time
 import chess
 import chess.engine
 import FreeSimpleGUI as sg
+import platform
+import zipfile
+import tarfile
+import shutil
+import urllib.request
 
 # --- 1 CONFIGURACIONES Y COLORES ---
 APP_TITLE = 'Ajedrez'
 IMG_PATH = 'Images/60'
-ENGINE_PATH = "engines/stockfish.exe" 
+ENGINE_FOLDER = "engines"
+ENGINE_PATH = os.path.join(ENGINE_FOLDER, "stockfish.exe") 
 
 COLORS = {
     "BG_APP": "#1A1A1A",
@@ -128,10 +134,83 @@ def engine_thread_func(current_board, q):
             q.put(result.move)
     except: pass
 
+# --- ENGINE DOWNLOADER (Functional) ---
+
+def get_engine_url():
+    """Detecta el sistema y retorna la URL adecuada de Stockfish."""
+    system = platform.system()
+    machine = platform.machine().lower()
+    base_url = "https://github.com/official-stockfish/Stockfish/releases/download/sf_16/"
+    
+    if system == "Windows":
+        return "stockfish.exe", base_url + "stockfish-windows-x86-64-avx2.zip"
+    elif system == "Linux":
+        return "stockfish", base_url + "stockfish-ubuntu-x86-64-avx2.tar"
+    elif system == "Darwin": # MacOS
+        if "arm" in machine or "aarch" in machine:
+            return "stockfish", base_url + "stockfish-macos-m1-apple-silicon.tar"
+        else:
+            return "stockfish", base_url + "stockfish-macos-x86-64.tar"
+    return None, None
+
+def ensure_engine():
+    """Verifica si existe el motor, si no, lo descarga e instala."""
+    if not os.path.exists(ENGINE_FOLDER):
+        os.makedirs(ENGINE_FOLDER)
+    
+    # Verificar si ya existe el ejecutable esperado (o cualquiera valido en la carpeta)
+    exe_name, url = get_engine_url()
+    if not exe_name: return None
+    
+    target_path = os.path.join(ENGINE_FOLDER, exe_name)
+    if os.path.exists(target_path): return target_path
+    
+    # Si no existe, descargar
+    print(f"Descargando Stockfish para {platform.system()} ({platform.machine()})...")
+    sg.popup_quick_message("Descargando motor de ajedrez...", background_color='#333333', text_color='white')
+    
+    try:
+        temp_name = "temp_engine.zip" if ".zip" in url else "temp_engine.tar"
+        temp_path = os.path.join(ENGINE_FOLDER, temp_name)
+        
+        urllib.request.urlretrieve(url, temp_path)
+        
+        print("Extrayendo...")
+        if temp_path.endswith(".zip"):
+            with zipfile.ZipFile(temp_path, 'r') as z: z.extractall(ENGINE_FOLDER)
+        else:
+            with tarfile.open(temp_path, 'r') as t: t.extractall(ENGINE_FOLDER)
+            
+        os.remove(temp_path)
+        
+        # Buscar el binario extraido y moverlo
+        for root, dirs, files in os.walk(ENGINE_FOLDER):
+            for file in files:
+                if file.startswith("stockfish") and (file.endswith(".exe") or "." not in file):
+                    found_path = os.path.join(root, file)
+                    if found_path != target_path:
+                        shutil.move(found_path, target_path)
+                    
+                    if platform.system() != "Windows":
+                        os.chmod(target_path, 0o755)
+                    return target_path
+    except Exception as e:
+        print(f"Error descarga: {e}")
+        return None
+    return None
+
 # --- 4 MAIN ---
 
 def main():
-    global selected_square, valid_moves_squares, is_bot_enabled, is_assistant_enabled, engine_suggestion, game_over_notified
+    global selected_square, valid_moves_squares, is_bot_enabled, is_assistant_enabled, engine_suggestion, game_over_notified, ENGINE_PATH
+    
+    # Asegurar motor antes de iniciar interfaz
+    engine_found = ensure_engine()
+    if engine_found:
+        ENGINE_PATH = engine_found
+    else:
+        print("No se pudo encontrar ni descargar el motor Stockfish.")
+
     sg.theme('DarkGrey15')
 
     # botones del tablero sin ningun tipo de padding interno
