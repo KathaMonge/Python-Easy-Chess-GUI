@@ -81,7 +81,7 @@ El programa detectará automáticamente la instalación del sistema.
 
 ### Inicio Rápido
 
-1. **Ejecuta el programa**: `python play_chess.py`
+1. **Ejecuta el programa**: `python kchess.py`
 2. **Primera ejecución**: En el primer inicio, el programa descargará el motor Stockfish automáticamente en la carpeta `engines/`. Puede tardar unos minutos dependiendo de tu conexión.
 
 ### Controles Básicos
@@ -152,7 +152,7 @@ El código está **optimizado para integración con LEDs** sin modificaciones:
 
 ```
 .
-├── play_chess.py          # Programa principal
+├── kchess.py          # Programa principal
 ├── Images/
 │   └── 60/               # Imágenes de piezas (60x60px)
 │       ├── bP.png        # Peón negro
