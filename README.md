@@ -1,4 +1,4 @@
-# Python Easy Chess GUI (Fork español y simplificado)
+# Python KChess
 
 Una interfaz gráfica de ajedrez compacta y funcional desarrollada en Python. Esta versión ha sido simplificada drásticamente para enfocarse en la facilidad de uso, la automatización y la integración futura con hardware (LEDs en Raspberry Pi).
 
@@ -6,6 +6,48 @@ Una interfaz gráfica de ajedrez compacta y funcional desarrollada en Python. Es
 <p align="center">
     <img width="485" height="657" alt="SS NEW UI" src="https://github.com/user-attachments/assets/07d30ff2-c567-4d01-a711-716a813b0633" />
 </p>
+
+---
+
+## Requisitos e Instalación
+
+```bash
+sudo apt-get update
+```
+
+### 1. Instalación en Linux
+
+Si usas Linux, asegúrate de tener instaladas las librerías de `tkinter`:
+
+```bash
+sudo apt install python3
+sudo apt install python3-pip
+sudo apt install python3-tk
+```
+
+### 2. Instalación en Raspberry Pi (ARM)
+
+Para sistemas ARM como Raspberry Pi, instala Stockfish desde los repositorios:
+
+```bash
+sudo apt-get install stockfish
+```
+
+### 3. Dependencias de Python:
+
+```bash
+python3 -m pip install python-chess FreeSimpleGUI
+```
+
+NOTA: En caso de error: "Cannot install packages due to an EnvironmentError: This environment is externally managed" se puede forzar:
+```bash
+python3 -m pip install python-chess FreeSimpleGUI --break-system-packages
+```
+
+Ejecutar el programa:
+```bash
+python3 kchess.py
+```
 
 ---
 
@@ -44,38 +86,6 @@ Una interfaz gráfica de ajedrez compacta y funcional desarrollada en Python. Es
 
 ---
 
-## Requisitos e Instalación
-
-### 1. Requisitos
-
-- **Python 3.8 o superior**
-- **Dependencias de Python**:
-  ```bash
-  pip install python-chess FreeSimpleGUI
-  ```
-
-### 2. Instalación en Linux
-
-Si usas Linux, asegúrate de tener instaladas las librerías de `tkinter`:
-
-```bash
-sudo apt install python3
-sudo apt install python3-pip
-sudo apt install python3-tk
-```
-
-### 3. Instalación en Raspberry Pi (ARM)
-
-Para sistemas ARM como Raspberry Pi, instala Stockfish desde los repositorios:
-
-```bash
-sudo apt-get update
-sudo apt-get install stockfish
-```
-
-El programa detectará automáticamente la instalación del sistema.
-
----
 
 ## Instrucciones de Uso
 
